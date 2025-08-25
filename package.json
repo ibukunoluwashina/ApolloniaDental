@@ -1,0 +1,26 @@
+{
+  "name": "apolloniadental",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ibukunoluwashina/ApolloniaDental.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ibukunoluwashina/ApolloniaDental/issues"
+  },
+  "homepage": "https://github.com/ibukunoluwashina/ApolloniaDental#readme",
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "mongoose": "^8.18.0"
+  }
+}
