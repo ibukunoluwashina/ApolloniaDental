@@ -5,8 +5,14 @@ const employeesSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
-  LastName: {
+  lastName: {
     type: String,
+    require: true,
+  },
+
+  department: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Department",
     require: true,
   },
 });

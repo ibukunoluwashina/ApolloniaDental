@@ -3,7 +3,7 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
 // const dbURI = process.env.DB_URI || "mongodb://localhost:27017/mydatabase
-const dbURI = process.env.DB_URI || "mongodb://localhost:27017/mydatabase";
+const dbURI = process.env.DB_URI || "mongodb://localhost:27017/apolloniadental";
 const connectDB = async () => {
   try {
     await mongoose.connect(dbURI, {

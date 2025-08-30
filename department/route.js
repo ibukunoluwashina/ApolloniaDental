@@ -5,11 +5,13 @@ const router = express.Router();
 const {
     newDepartment,
     getDepartmentById,
-    getAllDepartments
+    getAllDepartments,
+    getEmployeesDepartment
 } = require("./Handler");
 
-router.post("/", newDepartment);
-router.get("/:id", getDepartmentById);  
 router.get("/", getAllDepartments);
+router.get("/:id", getDepartmentById);  
+router.get("/:id/employees", getEmployeesDepartment);
+router.post("/", newDepartment);
 
 module.exports = router;

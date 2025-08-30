@@ -6,4 +6,3 @@ ADD index.js ./
 EXPOSE 3000
 ENV NAME apolloniadental
 CMD ["npm", "start"]
-
