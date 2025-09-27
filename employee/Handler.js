@@ -2,11 +2,27 @@ const Employee = require("./employees");
 
 const newEmployee = async (req, res) => {
   const { firstName, lastName, department } = req.body;
+
+  // Validate input
+  if (!firstName || !firstName.trim()) {
+    return res.status(400).json({ error: "First name is required" });
+  }
+  if (!lastName || !lastName.trim()) {
+    return res.status(400).json({ error: "Last name is required" });
+  }
+  // Department is optional - can be null for "No Department"
+
   try {
-    const employees = new Employee({ firstName, lastName, department });
-    await employees.save();
-    res.status(201).json(employees);
+    const employee = new Employee({
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+      department: department || null,
+    });
+    await employee.save();
+    await employee.populate("department", "name");
+    res.status(201).json(employee);
   } catch (error) {
+    console.error("Employee creation error:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -14,11 +30,11 @@ const newEmployee = async (req, res) => {
 const getEmployeeById = async (req, res) => {
   const { id } = req.params;
   try {
-    const employees = await Employee.findById(id).populate("department");
-    if (!employees) {
+    const employee = await Employee.findById(id).populate("department");
+    if (!employee) {
       return res.status(404).json({ error: "Employee not found" });
     }
-    res.status(200).json(employees);
+    res.status(200).json(employee);
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
@@ -36,37 +52,52 @@ const getAllEmployees = async (req, res) => {
 const updateEmployee = async (req, res) => {
   const { id } = req.params;
   const { firstName, lastName } = req.body;
+
+  // Validate input
+  if (!firstName || !firstName.trim()) {
+    return res.status(400).json({ error: "First name is required" });
+  }
+  if (!lastName || !lastName.trim()) {
+    return res.status(400).json({ error: "Last name is required" });
+  }
+
   try {
-    const employees = await Employee.findByIdAndUpdate(
+    const employee = await Employee.findByIdAndUpdate(
       id,
-      { firstName, lastName },
+      { firstName: firstName.trim(), lastName: lastName.trim() },
       { new: true }
-    );
-    if (!employees) {
+    ).populate("department", "name");
+
+    if (!employee) {
       return res.status(404).json({ error: "Employee not found" });
     }
-    res.status(200).json(employees);
+    res.status(200).json(employee);
   } catch (error) {
+    console.error("Employee update error:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
 
 const setEmployeeDepartment = async (req, res) => {
   const { department_id, employee_id } = req.body;
+
   try {
-    if (!department_id) {
-      return res.status(400).json({ error: "Department ID is required" });
+    if (!employee_id) {
+      return res.status(400).json({ error: "Employee ID is required" });
     }
-    const employees = await Employee.findByIdAndUpdate(
+
+    const employee = await Employee.findByIdAndUpdate(
       employee_id,
-      { department: department_id },
+      { department: department_id || null },
       { new: true }
-    );
-    if (!employees) {
+    ).populate("department", "name");
+
+    if (!employee) {
       return res.status(404).json({ error: "Employee not found" });
     }
-    res.status(200).json(employees);
+    res.status(200).json(employee);
   } catch (error) {
+    console.error("Set employee department error:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -74,8 +105,8 @@ const setEmployeeDepartment = async (req, res) => {
 const deleteEmployee = async (req, res) => {
   const { id } = req.params;
   try {
-    const employees = await Employee.findByIdAndDelete(id);
-    if (!employees) {
+    const employee = await Employee.findByIdAndDelete(id);
+    if (!employee) {
       return res.status(404).json({ error: "Employee not found" });
     }
     res.status(200).json({ message: "Employee deleted successfully" });
@@ -90,5 +121,5 @@ module.exports = {
   getAllEmployees,
   updateEmployee,
   deleteEmployee,
-  setEmployeeDepartment
+  setEmployeeDepartment,
 };
